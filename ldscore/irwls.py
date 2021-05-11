@@ -112,7 +112,7 @@ class IRWLS(object):
         for i in range(2):  # update this later
             new_w = np.sqrt(update_func(cls.wls(x, y, w)))
             if new_w.shape != w.shape:
-                print('IRWLS update:', new_w.shape, w.shape)
+                print(('IRWLS update:', new_w.shape, w.shape))
                 raise ValueError('New weights must have same shape.')
             else:
                 w = new_w

@@ -394,11 +394,11 @@ def estimate_rg(args, log):
     def f(x): return _split_or_none(x, n_pheno)
     args.intercept_h2, args.intercept_gencov, args.samp_prev, args.pop_prev = list(map(f,
                                                                                   (args.intercept_h2, args.intercept_gencov, args.samp_prev, args.pop_prev)))
-    list(map(lambda x: _check_arg_len(x, n_pheno), ((args.intercept_h2, '--intercept-h2'),
+    list([_check_arg_len(x, n_pheno) for x in ((args.intercept_h2, '--intercept-h2'),
                                                (args.intercept_gencov,
                                                 '--intercept-gencov'),
                                                (args.samp_prev, '--samp-prev'),
-                                               (args.pop_prev, '--pop-prev'))))
+                                               (args.pop_prev, '--pop-prev'))])
     if args.no_intercept:
         args.intercept_h2 = [1 for _ in range(n_pheno)]
         args.intercept_gencov = [0 for _ in range(n_pheno)]
@@ -417,24 +417,24 @@ def estimate_rg(args, log):
     for i, p2 in enumerate(rg_paths[1:n_pheno]):
         log.log(
             'Computing rg for phenotype {I}/{N}'.format(I=i + 2, N=len(rg_paths)))
-        try:
-            loop = _read_other_sumstats(args, log, p2, sumstats, ref_ld_cnames)
-            rghat = _rg(loop, args, log, M_annot, ref_ld_cnames, w_ld_cname, i)
-            RG.append(rghat)
-            _print_gencor(args, log, rghat, ref_ld_cnames, i, rg_paths, i == 0)
-            out_prefix_loop = out_prefix + '_' + rg_files[i + 1]
-            if args.print_cov:
-                _print_rg_cov(rghat, out_prefix_loop, log)
-            if args.print_delete_vals:
-                _print_rg_delete_values(rghat, out_prefix_loop, log)
+        #try:
+        loop = _read_other_sumstats(args, log, p2, sumstats, ref_ld_cnames)
+        rghat = _rg(loop, args, log, M_annot, ref_ld_cnames, w_ld_cname, i)
+        RG.append(rghat)
+        _print_gencor(args, log, rghat, ref_ld_cnames, i, rg_paths, i == 0)
+        out_prefix_loop = out_prefix + '_' + rg_files[i + 1]
+        if args.print_cov:
+            _print_rg_cov(rghat, out_prefix_loop, log)
+        if args.print_delete_vals:
+            _print_rg_delete_values(rghat, out_prefix_loop, log)
 
-        except Exception:  # keep going if phenotype 50/100 causes an error
-            msg = 'ERROR computing rg for phenotype {I}/{N}, from file {F}.'
-            log.log(msg.format(I=i + 2, N=len(rg_paths), F=rg_paths[i + 1]))
-            ex_type, ex, tb = sys.exc_info()
-            log.log(traceback.format_exc(ex) + '\n')
-            if len(RG) <= i:  # if exception raised before appending to RG
-                RG.append(None)
+        #except Exception:  # keep going if phenotype 50/100 causes an error
+            #msg = 'ERROR computing rg for phenotype {I}/{N}, from file {F}.'
+            #log.log(msg.format(I=i + 2, N=len(rg_paths), F=rg_paths[i + 1]))
+            #ex_type, ex, tb = sys.exc_info()
+            #log.log(traceback.format_exc(ex) + '\n')
+            #if len(RG) <= i:  # if exception raised before appending to RG
+                #RG.append(None)
 
     log.log('\nSummary of Genetic Correlation Results\n' +
             _get_rg_table(rg_paths, RG, args))

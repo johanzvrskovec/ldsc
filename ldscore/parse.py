@@ -33,7 +33,10 @@ def get_present_chrs(fh, num):
     '''Checks which chromosomes exist, assuming that the file base will be appended by a dot in any suffix.'''
     chrs = []
     for chrom in range(1,num):
-        if glob.glob(sub_chr(fh, chrom) + '.*'):
+        toglob = sub_chr(fh,chrom)+".*"
+        print('toglob for this file is:'+toglob)
+        globbed = glob.glob(toglob)
+        if len(globbed)>0:
             chrs.append(chrom)
     return chrs
 
@@ -101,8 +104,12 @@ def sumstats(fh, alleles=False, dropna=True):
 
 def ldscore_fromlist(flist, num=None):
     '''Sideways concatenation of a list of LD Score files.'''
+    #print('Sideways concatenation of LD score files in list')
+    #print('files:'+str(flist))
+    #print('num='+str(num))
     ldscore_array = []
     for i, fh in enumerate(flist):
+        print('Found LD score file at '+str(i)+' and with filehandle '+str(fh))
         y = ldscore(fh, num)
         if i > 0:
             if not series_eq(y.SNP, ldscore_array[0].SNP):
@@ -149,6 +156,7 @@ def ldscore(fh, num=None):
     suffix = '.l2.ldscore'
     if num is not None:  # num files, e.g., one per chromosome
         chrs = get_present_chrs(fh, num+1)
+        print('NUmber of chromosomes found: '+str(len(chrs)))
         first_fh = sub_chr(fh, chrs[0]) + suffix
         s, compression = which_compression(first_fh)
         chr_ld = [l2_parser(sub_chr(fh, i) + suffix + s, compression)

@@ -86,7 +86,7 @@ class __GenotypeArrayInMemory__(object):
                                                                  self.n)
 
             if self.n > 0:
-                print('After filtering, {n} individuals remain'.format(n=self.n))
+                print(('After filtering, {n} individuals remain'.format(n=self.n)))
             else:
                 raise ValueError('After filtering, no individuals remain')
 
@@ -100,7 +100,7 @@ class __GenotypeArrayInMemory__(object):
             self.geno, self.m, self.n, self.mafMin, keep_snps)
 
         if self.m > 0:
-            print('After filtering, {m} SNPs remain'.format(m=self.m))
+            print(('After filtering, {m} SNPs remain'.format(m=self.m)))
         else:
             raise ValueError('After filtering, no SNPs remain')
 
@@ -337,7 +337,7 @@ class PlinkBEDFile(__GenotypeArrayInMemory__):
         m_poly = 0
         y = ba.bitarray()
         if keep_snps is None:
-            keep_snps = range(m)
+            keep_snps = list(range(m))
         kept_snps = []
         freq = []
         for e, j in enumerate(keep_snps):
