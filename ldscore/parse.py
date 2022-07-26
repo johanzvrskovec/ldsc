@@ -34,7 +34,6 @@ def get_present_chrs(fh, num):
     chrs = []
     for chrom in range(1,num):
         toglob = sub_chr(fh,chrom)+".*"
-        print('toglob for this file is:'+toglob)
         globbed = glob.glob(toglob)
         if len(globbed)>0:
             chrs.append(chrom)
@@ -156,7 +155,7 @@ def ldscore(fh, num=None):
     suffix = '.l2.ldscore'
     if num is not None:  # num files, e.g., one per chromosome
         chrs = get_present_chrs(fh, num+1)
-        print('NUmber of chromosomes found: '+str(len(chrs)))
+        print('Number of chromosomes found: '+str(len(chrs)))
         first_fh = sub_chr(fh, chrs[0]) + suffix
         s, compression = which_compression(first_fh)
         chr_ld = [l2_parser(sub_chr(fh, i) + suffix + s, compression)
@@ -168,6 +167,7 @@ def ldscore(fh, num=None):
 
     x = x.sort_values(by=['CHR', 'BP'])  # SEs will be wrong unless sorted
     x = x.drop(['CHR', 'BP'], axis=1).drop_duplicates(subset='SNP')
+    print('Length of x (ldscores) is'+str(len(x)))
     return x
 
 
