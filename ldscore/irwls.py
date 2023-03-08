@@ -158,6 +158,13 @@ class IRWLS(object):
 
         x = cls._weight(x, w)
         y = cls._weight(y, w)
+
+        #JZ: added these to avoid errors in the extreme cases where there are NA or non-finite values here.
+        #x.interpolate(inplace=True)
+        #y.iterpolate(inplace=True)
+        #x.fillna(x.mean(), inplace=True)
+        #y.fillna(y.mean(), inplace=True)
+
         coef = np.linalg.lstsq(x, y)
         return coef
 
